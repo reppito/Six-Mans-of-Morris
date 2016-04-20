@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="jpl">
+    <archive path="C:/Program Files/swipl/lib/jpl.jar" />
+  </library>
+</eclipse-userlibraries>
+
