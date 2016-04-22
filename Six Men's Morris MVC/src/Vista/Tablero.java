@@ -136,6 +136,7 @@ public class Tablero extends JPanel {
         punto[13] = new Point(punto[6].x, this.getHeight() - 50);
         punto[14] = new Point(punto[11].x, punto[13].y);
         punto[15] = new Point(punto[2].x, punto[13].y);
+
     }
 
     private void posicionaFichas() {
