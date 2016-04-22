@@ -13,6 +13,7 @@ public class ListaPosiciones {
     			 s+=a[i]+",";
     		 else
     			 s+=a[i]+"";
+
     	 s+="]";
     	 return s;
      }

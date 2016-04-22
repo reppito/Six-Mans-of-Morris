@@ -120,6 +120,7 @@ public class Tablero extends JPanel {
     }
 
     private void inicializarPosiciones() {
+        
         punto[0] = new Point(50, 50);
         punto[1] = new Point(this.getWidth() / 2, 50);
         punto[2] = new Point(this.getWidth() - 50, 50);

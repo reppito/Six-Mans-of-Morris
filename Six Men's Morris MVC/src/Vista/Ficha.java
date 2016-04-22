@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public abstract class Ficha extends JLabel {
+
     protected final int NEGRA = 1;
     protected final int BLANCA = 2;
     protected ImageIcon color_ficha;
@@ -21,13 +22,16 @@ public abstract class Ficha extends JLabel {
 
     public void setSelected(boolean selected) {
         this.isSelected = selected;
+
     }
 
     public int getTipo() {
         return this.tipo;
+
     }
 
     public boolean isSelected() {
         return this.isSelected;
+
     }
 }
