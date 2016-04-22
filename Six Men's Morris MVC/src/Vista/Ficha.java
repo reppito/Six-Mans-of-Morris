@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 
 public abstract class Ficha extends JLabel {
 
+
     protected final int NEGRA = 1;
     protected final int BLANCA = 2;
     protected ImageIcon color_ficha;

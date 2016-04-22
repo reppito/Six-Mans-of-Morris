@@ -20,6 +20,7 @@ $RECYCLE.BIN/
 # Java
 .class
 .xml
+out/
 
 # =========================
 # Operating System Files

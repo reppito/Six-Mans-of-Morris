@@ -12,6 +12,7 @@ public class Juego extends JFrame  {
     private final Tablero tablero;
 
     public Juego() {
+
         super("Six Men\'s Morris");
         this.dimension = new Dimension(WIDTH, HEIGHT);
         this.tablero = new Tablero();

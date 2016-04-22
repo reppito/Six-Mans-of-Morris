@@ -107,6 +107,7 @@ public class Tablero extends JPanel {
             this.drawGame();
         }
 
+
         g.drawImage(this.bufferedImage, 0, 0, (ImageObserver) null);
     }
 

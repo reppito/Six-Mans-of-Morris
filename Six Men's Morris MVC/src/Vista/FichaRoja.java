@@ -7,6 +7,7 @@ package Vista;
 import javax.swing.ImageIcon;
 
 public class FichaRoja extends Ficha {
+
     public FichaRoja() {
         this.tipo = 2;
         this.color_ficha = new ImageIcon(this.ruta.getAbsolutePath()+"\\fichaRoja.jpg");
