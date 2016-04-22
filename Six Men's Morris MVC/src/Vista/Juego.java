@@ -5,7 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
-public class Juego extends JFrame {
+public class Juego extends JFrame  {
     public static int WIDTH = 600;
     public static int HEIGHT = 600;
     public Dimension dimension;

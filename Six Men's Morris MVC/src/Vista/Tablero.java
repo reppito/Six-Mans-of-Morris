@@ -1,15 +1,20 @@
 package Vista;
 
+import Modelo.ListaPosiciones;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class Tablero extends JPanel {
     private final Color BACKGROUND_COLOUR;
@@ -20,9 +25,11 @@ public class Tablero extends JPanel {
     private final int BOTTOM_WIDTH;
     private static final Point[] punto = new Point[16];
     private Ficha[] fichas_negras;
-    private Ficha[] fichas_blancas;
+    private Ficha[] fichas_Rojas;
     private Graphics2D g2d;
     private BufferedImage bufferedImage;
+    private JButton JBprobar;
+    private ListaPosiciones posiciones;
 
     public Tablero() {
         this.BACKGROUND_COLOUR = Color.WHITE;
@@ -31,30 +38,85 @@ public class Tablero extends JPanel {
         this.LEFT_WIDTH = 4;
         this.RIGHT_WIDTH = 4;
         this.BOTTOM_WIDTH = 4;
-        this.setLayout((LayoutManager)null);
+        this.setLayout((LayoutManager) null);
         this.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, this.BORDER_COLOR));
         this.fichas_negras = new FichaNegra[6];
-        this.fichas_blancas = new FichaRoja[6];
+        this.fichas_Rojas = new FichaRoja[6];
+        JBprobar = new JButton("probar");
+        posiciones = new ListaPosiciones();
+        JBprobar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //esto es solo para la prueba este metodo se llamara aparte
+                PosicionarSegunTablero();
+            }
+        });
+        JBprobar.setBounds(500, 500, 80, 50);
+        this.add(JBprobar);
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int posClickX = e.getX();
+                int posClickY = e.getY();
+
+                for (int i = 0; i < punto.length; i++)
+                    if (Math.abs(punto[i].getX() - posClickX) < 40 && Math.abs(punto[i].getY() - posClickY) < 40)
+                        System.out.println("se presiono el punto " + punto[i].getX() + " " + punto[i].getY());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+    }
+
+    public void PosicionarSegunTablero() {
+        int negra = 0;
+        int rojas = 0;
+        for (int i = 0; i < posiciones.getSizeInt(); i++) {
+            if (posiciones.getElementInt(i) == fichas_Rojas[rojas].getTipo())
+                fichas_Rojas[rojas++].setBounds(punto[i].x - 20, punto[i].y - 20, 40, 40);
+            else if (posiciones.getElementInt(i) == fichas_negras[negra].getTipo())
+                fichas_negras[negra++].setBounds(punto[i].x - 20, punto[i].y - 20, 40, 40);
+
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if(this.bufferedImage == null) {
+        if (this.bufferedImage == null) {
             this.createBufferedImage();
             this.inicializarPosiciones();
             this.posicionaFichas();
             this.drawGame();
         }
 
-        g.drawImage(this.bufferedImage, 0, 0, (ImageObserver)null);
+        g.drawImage(this.bufferedImage, 0, 0, (ImageObserver) null);
     }
 
     private void createBufferedImage() {
-        this.bufferedImage = (BufferedImage)this.createImage(Juego.WIDTH, Juego.HEIGHT);
-        this.g2d = (Graphics2D)this.bufferedImage.getGraphics();
+        this.bufferedImage = (BufferedImage) this.createImage(Juego.WIDTH, Juego.HEIGHT);
+        this.g2d = (Graphics2D) this.bufferedImage.getGraphics();
         this.g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         this.g2d.setBackground(this.BACKGROUND_COLOUR);
         this.g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+
     }
 
     private void inicializarPosiciones() {
@@ -79,28 +141,21 @@ public class Tablero extends JPanel {
     private void posicionaFichas() {
         boolean contador_posiciones = false;
 
-        int pos;
-        for(pos = 0; pos < this.fichas_negras.length; ++pos) {
+
+        for (int pos = 0; pos < this.fichas_negras.length; pos++) {
             this.fichas_negras[pos] = new FichaNegra();
-            this.fichas_blancas[pos] = new FichaRoja();
-        }
+            this.fichas_Rojas[pos] = new FichaRoja();
+            this.fichas_negras[pos].setBounds(-20, 100 + (pos * 40), 40, 40);
+            this.fichas_Rojas[pos].setBounds(this.getWidth() - 20, 100 + (pos * 40), 40, 40);
+            this.add(this.fichas_negras[pos]);
+            this.add(this.fichas_Rojas[pos]);
 
-        int var3;
-        for(var3 = 0; var3 < this.fichas_negras.length; ++var3) {
-            this.fichas_negras[var3].setBounds(punto[var3].x - 20, punto[var3].y - 20, 40, 40);
-            this.add(this.fichas_negras[var3]);
-        }
-
-        for(pos = 0; pos < this.fichas_blancas.length; ++pos) {
-            this.fichas_blancas[pos].setBounds(punto[var3].x - 20, punto[var3].y - 20, 40, 40);
-            this.add(this.fichas_blancas[pos]);
-            ++var3;
         }
 
     }
 
     private void drawGame() {
-        if(this.g2d != null) {
+        if (this.g2d != null) {
             this.g2d.drawLine(punto[0].x, punto[0].y, punto[2].x, punto[2].y);
             this.g2d.drawLine(punto[0].x, punto[0].y, punto[13].x, punto[13].y);
             this.g2d.drawLine(punto[1].x, punto[1].y, punto[4].x, punto[4].y);
@@ -118,10 +173,15 @@ public class Tablero extends JPanel {
     }
 
     public void clearPanel() {
-        if(this.g2d != null) {
+        if (this.g2d != null) {
             this.g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
             this.repaint();
         }
 
     }
+
+    //De aqui en adelante es el Juego
+
 }
+
+

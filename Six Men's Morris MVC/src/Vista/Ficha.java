@@ -6,8 +6,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public abstract class Ficha extends JLabel {
-    protected final int NEGRA = 0;
-    protected final int BLANCA = 1;
+    protected final int NEGRA = 1;
+    protected final int BLANCA = 2;
     protected ImageIcon color_ficha;
     protected ImageIcon ficha_seleccionada;
     protected boolean estaEliminada = false;

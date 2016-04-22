@@ -1,7 +1,7 @@
 package Modelo;
 
 public class ListaPosiciones {
-     static int a[]= {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+     static int a[]= {0,1,0,0,0,0,2,0,1,1,0,0,3,0,0,0};
      private String pos[]={"q1","q2","q3","q4","q5","q6","q7","q8","q9","q10"
     		                ,"q11","q12","q13","q14","q15","q16"};
      
