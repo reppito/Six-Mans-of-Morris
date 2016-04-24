@@ -128,9 +128,13 @@ public class Tablero extends JPanel {
                 if (tresEnLinea && !ganador ){
                     eliminarFicha(posicion);
                 }
-                if(Trancado())
+                if(cantidad_movimientos>=12&&Trancado())
                 {
-                    System.out.println("Gano Alguien");
+                    if(!turno)
+                        System.out.println("Ganaron las Negras");
+                    else
+                        System.out.print("Ganaron las Rojas!");
+                    ganador=true;
                 }
             }
 
@@ -469,19 +473,22 @@ public class Tablero extends JPanel {
         //Si es el turno de las rojas
         if(turno)
         {
-            for (int i= 0; i < fichas_Rojas.size(); i++)
+            for (int i= 0; i < fichas_negras.size(); i++)
             {
-                if(consultas.MovimientoDisponible(fichas_Rojas.get(i).posicion)) {
+                if(consultas.MovimientoDisponible(fichas_negras.get(i).posicion)) {
+                    System.out.println("entre1");
                     return false;
                 }
 
             }
         }
         else{
-            for (int i = 0; i < fichas_negras.size(); i++)
+            for (int i = 0; i < fichas_Rojas.size(); i++)
             {
-                if(consultas.MovimientoDisponible(fichas_negras.get(i).posicion))
+                if(consultas.MovimientoDisponible(fichas_Rojas.get(i).posicion)){
+                    System.out.println("entre2");
                     return false;
+                }
             }
         }
         return true;

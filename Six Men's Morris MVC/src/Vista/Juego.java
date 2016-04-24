@@ -33,6 +33,5 @@ public class Juego extends JFrame  {
        new Juego();
 
 
-
     }
 }
