@@ -33,6 +33,7 @@ trans(q9, q13).
 
 trans(q10, q3).
 trans(q10, q16).
+trans(q10,q9).
 
 trans(q11, q8).
 trans(q11, q12).

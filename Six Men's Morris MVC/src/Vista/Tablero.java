@@ -9,8 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -25,6 +23,18 @@ public class Tablero extends JPanel {
     private Graphics2D g2d;
     private BufferedImage bufferedImage;
 
+    private JLabel turno_ficha = new JLabel("Turno");
+    private JTextField color_ficha = new JTextField(20);
+
+    private JLabel label_negras = new JLabel("Negras:");
+    private JLabel label_rojas = new JLabel("Rojas:");
+
+    private JTextField contador_negras = new JTextField(5);
+    private JTextField contador_rojas = new JTextField(5);
+
+
+
+
     private static final Point[] punto = new Point[16];
 
     private ArrayList<Ficha> fichas_negras;
@@ -36,8 +46,10 @@ public class Tablero extends JPanel {
     private int SFNegras;
     private int SFRojas;
 
+    private  boolean ganador=false;
+
     boolean turno = false;
-    boolean segundoClick = false;
+    boolean tresEnLinea = false;
 
     int cantidad_movimientos = 0;
 
@@ -46,8 +58,37 @@ public class Tablero extends JPanel {
         SFNegras = 0;
         SFRojas = 0;
 
-        fichas_negras= new ArrayList<Ficha>();
-        fichas_Rojas= new ArrayList<Ficha>();
+        color_ficha.setEditable(false);
+        color_ficha.setBackground(Color.RED);
+
+        contador_negras.setEditable(false);
+        contador_rojas.setEditable(false);
+
+
+
+        add(turno_ficha);
+        add(color_ficha);
+        add(label_negras);
+        add(contador_negras);
+        add(label_rojas);
+        add(contador_rojas);
+
+        turno_ficha.setBounds(20,10,40,20);
+        color_ficha.setBounds(60,10, 20, 20);
+
+        label_negras.setBounds(350, 10, 50, 20);
+        contador_negras.setBounds(400, 10, 20, 20);
+
+        label_rojas.setBounds(430, 10, 50, 20);
+        contador_rojas.setBounds(470,10, 20, 20);
+
+
+
+        contador_negras.setText(SFNegras + "");
+        contador_rojas.setText(SFRojas + "");
+
+        fichas_negras = new ArrayList<Ficha>();
+        fichas_Rojas = new ArrayList<Ficha>();
 
         consultas = new Consultas();
 
@@ -55,6 +96,7 @@ public class Tablero extends JPanel {
         this.BORDER_COLOR = Color.lightGray;
 
         this.setLayout((LayoutManager) null);
+
         this.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, this.BORDER_COLOR));
 
         posiciones = new ListaPosiciones();
@@ -66,19 +108,30 @@ public class Tablero extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 int posicion = atraparPunto(e);
 
-
-                if(segundoClick == false)
+               //FIRST PART
+                if(tresEnLinea == false && cantidad_movimientos < 12&&!ganador)
                     //Posicionando fichas
                     earlyGame(posicion);
-                    //Movimiento de fichas
 
-                else {
+
+
+                //SECOND PART
+                if(cantidad_movimientos >= 12 && !tresEnLinea &&!ganador) {
+                   if(posiciones.getElementInt(posicion) != 0)
+                        seleccionarFicha(posicion);
+                    else if (posiciones.getElementInt(posicion) == 0){
+                        moverFicha(posicion);
+                   }
+
+                }
+                //Si se hace tresEnLinea se elimina
+                if (tresEnLinea && !ganador ){
                     eliminarFicha(posicion);
                 }
-
-
-
-
+                if(Trancado())
+                {
+                    System.out.println("Gano Alguien");
+                }
             }
 
             @Override
@@ -155,7 +208,7 @@ public class Tablero extends JPanel {
         {
             fichas_negras.add(new FichaNegra());
             fichas_Rojas.add(new FichaRoja());
-            
+
 
             this.add(fichas_Rojas.get(i));
             this.add(fichas_negras.get(i));
@@ -199,7 +252,7 @@ public class Tablero extends JPanel {
         int posClickY = e.getY();
 
         for (int i = 0; i < punto.length; i++)
-            if (Math.abs(punto[i].getX() - posClickX) < 40 && Math.abs(punto[i].getY() - posClickY) < 40)
+            if (Math.abs(punto[i].getX() - posClickX) < 60 && Math.abs(punto[i].getY() - posClickY) < 60)
                 return i;
 
         return -1;
@@ -207,19 +260,24 @@ public class Tablero extends JPanel {
 
     private void earlyGame(int posicion){
 
-        if(posiciones.getElementInt(posicion) == 0 && cantidad_movimientos < 12){
+        if(posiciones.getElementInt(posicion) == 0 ){
             if(!turno){
                 fichas_Rojas.get(SFRojas).setPosicion(posicion);
                 fichas_Rojas.get(SFRojas).setBounds(punto[posicion].x - 20, punto[posicion].y - 20, 40, 40);
                 posiciones.setInt(posicion, fichas_Rojas.get(SFRojas).getTipo());
 
                 SFRojas++;
+                contador_rojas.setText(SFRojas + "");
+
 
                 if(verificarTresEnLinea(posicion)){
-                    segundoClick = true;
+                    tresEnLinea = true;
                 }
-                else
+                else{
                     this.turno = true;
+                    color_ficha.setBackground(Color.BLACK);
+                }
+
 
             }
             else{
@@ -227,14 +285,19 @@ public class Tablero extends JPanel {
                 fichas_negras.get(SFNegras).setBounds(punto[posicion].x - 20, punto[posicion].y - 20, 40, 40);
                 posiciones.setInt(posicion, fichas_negras.get(SFNegras).getTipo());
                 SFNegras++;
+                contador_negras.setText(SFNegras + "");
+
 
                 if(verificarTresEnLinea(posicion)){
-                    segundoClick = true;
+                    tresEnLinea = true;
                 }
-                else
+                else{
                     this.turno = false;
+                    color_ficha.setBackground(Color.RED);
+                }
+
             }
-            System.out.println(posiciones.toStringInt());
+            //System.out.println(posiciones.toStringInt());
             cantidad_movimientos++;
         }
     }
@@ -249,18 +312,21 @@ public class Tablero extends JPanel {
                 //
                 if(fichas_Rojas.get(i).posicion == posicion) {
 
-                    System.out.println(posicion);
-                    System.out.println(i);
+
                     this.remove(fichas_Rojas.get(i));
                     fichas_Rojas.remove(i);
                     posiciones.setInt(posicion, 0);
 
                     turno = false;
-                    segundoClick = false;
+                    tresEnLinea = false;
 
                     SFRojas--;
-
-
+                    if(MenorATres(SFRojas)&&cantidad_movimientos==12) {
+                        System.out.println("GANARON LAS NEGRAS");
+                        ganador=true;
+                    }
+                    contador_rojas.setText(SFRojas + "");
+                    color_ficha.setBackground(Color.RED);
 
                 }
 
@@ -273,9 +339,15 @@ public class Tablero extends JPanel {
                     this.remove(fichas_negras.get(i));
                     fichas_negras.remove(i);
                     posiciones.setInt(posicion, 0);
-                    turno= true;
-                    segundoClick = false;
+                    turno = true;
+                    tresEnLinea = false;
                     SFNegras--;
+                    if(MenorATres(SFNegras)&&cantidad_movimientos==12){
+                        System.out.println("GANARON LAS ROJAS");
+                        ganador=true;
+                    }
+                    contador_negras.setText(SFNegras + "");
+                    color_ficha.setBackground(Color.BLACK);
 
                 }
             }
@@ -284,6 +356,136 @@ public class Tablero extends JPanel {
         repaint();
     }
 
+    private void seleccionarFicha(int posicion){
+        //si es el turno de las rojas
+        if(!turno){
+            for (int i = 0; i < fichas_Rojas.size(); i++) {
+                //
+                if (fichas_Rojas.get(i).isSelected()) {
+                    fichas_Rojas.get(i).setSelected(false);
+                }
+                if (fichas_Rojas.get(i).posicion == posicion) {
+                    fichas_Rojas.get(i).setSelected(true);
+                }
+            }
+        }
+        //turno negras
+        else{
+            for (int i = 0; i < fichas_negras.size(); i++){
+
+                    if (fichas_negras.get(i).isSelected()) {
+                        fichas_negras.get(i).setSelected(false);
+                    }
+                    if (fichas_negras.get(i).posicion == posicion) {
+                        fichas_negras.get(i).setSelected(true);
+                    }
+
+
+            }
+        }
+        //System.out.println(posiciones.toStringInt());
+        repaint();
+
+    }
+    private void moverFicha(int posicion)
+    {  ArrayList<Integer> PosiblesMov;
+        if(!turno){
+            for (int i = 0; i < fichas_Rojas.size(); i++) {
+                //
+                if (fichas_Rojas.get(i).isSelected()) {
+                     PosiblesMov = consultas.movimientos(fichas_Rojas.get(i).posicion);
+
+                    for(Integer pos: PosiblesMov)
+                    {
+                        if(pos == posicion)
+                        {
+                            posiciones.setInt(fichas_Rojas.get(i).posicion, 0);
+                            posiciones.setInt(posicion,fichas_Rojas.get(i).getTipo());
+                            fichas_Rojas.get(i).setPosicion(posicion);
+                            fichas_Rojas.get(i).setBounds(punto[posicion].x - 20, punto[posicion].y - 20, 40, 40);
+                            fichas_Rojas.get(i).setSelected(false);
+                            if(verificarTresEnLinea(posicion)){
+                                tresEnLinea = true;
+                            }
+
+                            else{
+                                turno = true;
+                                color_ficha.setBackground(Color.BLACK);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+        }
+        //turno negras
+        else{
+            for (int i = 0; i < fichas_negras.size(); i++){
+
+                if (fichas_negras.get(i).isSelected()) {
+                    PosiblesMov = consultas.movimientos(fichas_negras.get(i).posicion);
+
+                    for(Integer pos: PosiblesMov)
+                    {
+                        if(pos == posicion)
+                        {
+                            posiciones.setInt(fichas_negras.get(i).posicion, 0);
+                            posiciones.setInt(posicion,fichas_negras.get(i).getTipo());
+                            fichas_negras.get(i).setPosicion(posicion);
+
+                            fichas_negras.get(i).setBounds(punto[posicion].x - 20, punto[posicion].y - 20, 40, 40);
+                            fichas_negras.get(i).setSelected(false);
+                            if(verificarTresEnLinea(posicion)){
+                                tresEnLinea = true;
+                            }
+
+                            else{
+                                turno = false;
+                                color_ficha.setBackground(Color.RED);
+                            }
+
+                        }
+                    }
+                }
+
+
+
+            }
+        }
+        repaint();
+        System.out.println(posiciones.toStringInt());
+    }
+
+    private boolean MenorATres(int cantidad){
+        if(cantidad < 3)
+            return true;
+        return false;
+
+
+    }
+    private boolean Trancado()
+    {
+        //Si es el turno de las rojas
+        if(turno)
+        {
+            for (int i= 0; i < fichas_Rojas.size(); i++)
+            {
+                if(consultas.MovimientoDisponible(fichas_Rojas.get(i).posicion)) {
+                    return false;
+                }
+
+            }
+        }
+        else{
+            for (int i = 0; i < fichas_negras.size(); i++)
+            {
+                if(consultas.MovimientoDisponible(fichas_negras.get(i).posicion))
+                    return false;
+            }
+        }
+        return true;
+    }
 }
 
 

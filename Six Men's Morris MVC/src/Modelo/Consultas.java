@@ -67,12 +67,19 @@ public class Consultas {
 
     }
     public ArrayList<Integer> movimientos(int i)
-    {  System.out.println(lista.getElementString(i));
+    { //System.out.println(lista.getElementString(i));
         ArrayList<Integer> pos= new ArrayList<Integer>();
         Query movimientos= new Query("verificarMovimientos("+lista.toStringInt()+","+lista.getElementString(i)+",X)");
         Map<String, Term>[] soluciones= movimientos.allSolutions();
         for(int j=0;j<soluciones.length;j++)
             pos.add(Integer.parseInt(soluciones[j].get("X").toString()));
         return pos;
+    }
+    public  boolean MovimientoDisponible(int i)
+    {
+        Query movimientos= new Query("verificarMovimientos("+lista.toStringInt()+","+lista.getElementString(i)+",X)");
+        if(movimientos.hasSolution())
+            return true;
+        return false;
     }
 }

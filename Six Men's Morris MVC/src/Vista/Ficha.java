@@ -25,6 +25,7 @@ public abstract class Ficha extends JLabel {
     public Ficha() {
         this.setOpaque(true);
         posicion = -1;
+        isSelected = false;
     }
 
     public void setSelected(boolean selected) {
@@ -36,6 +37,7 @@ public abstract class Ficha extends JLabel {
         return this.tipo;
 
     }
+
 
     public boolean isSelected() {
         return this.isSelected;
