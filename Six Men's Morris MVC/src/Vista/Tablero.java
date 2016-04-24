@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class Tablero extends JPanel {
@@ -24,14 +25,20 @@ public class Tablero extends JPanel {
     private final int RIGHT_WIDTH;
     private final int BOTTOM_WIDTH;
     private static final Point[] punto = new Point[16];
-    private Ficha[] fichas_negras;
-    private Ficha[] fichas_Rojas;
+    private ArrayList<Ficha> fichas_negras;
+    private ArrayList<Ficha> fichas_Rojas;
     private Graphics2D g2d;
     private BufferedImage bufferedImage;
-    private JButton JBprobar;
+
     private ListaPosiciones posiciones;
+    private int SFNegras;
+    private int SFRojas;
 
     public Tablero() {
+        SFNegras=0;
+        SFRojas=0;
+        fichas_negras= new ArrayList<Ficha>();
+        fichas_Rojas= new ArrayList<Ficha>();
         this.BACKGROUND_COLOUR = Color.WHITE;
         this.BORDER_COLOR = Color.lightGray;
         this.TOP_WIDTH = 4;
@@ -40,19 +47,11 @@ public class Tablero extends JPanel {
         this.BOTTOM_WIDTH = 4;
         this.setLayout((LayoutManager) null);
         this.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, this.BORDER_COLOR));
-        this.fichas_negras = new FichaNegra[6];
-        this.fichas_Rojas = new FichaRoja[6];
-        JBprobar = new JButton("probar");
+
         posiciones = new ListaPosiciones();
-        JBprobar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //esto es solo para la prueba este metodo se llamara aparte
-                PosicionarSegunTablero();
-            }
-        });
-        JBprobar.setBounds(500, 500, 80, 50);
-        this.add(JBprobar);
+
+
+
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -86,17 +85,7 @@ public class Tablero extends JPanel {
         });
     }
 
-    public void PosicionarSegunTablero() {
-        int negra = 0;
-        int rojas = 0;
-        for (int i = 0; i < posiciones.getSizeInt(); i++) {
-            if (posiciones.getElementInt(i) == fichas_Rojas[rojas].getTipo())
-                fichas_Rojas[rojas++].setBounds(punto[i].x - 20, punto[i].y - 20, 40, 40);
-            else if (posiciones.getElementInt(i) == fichas_negras[negra].getTipo())
-                fichas_negras[negra++].setBounds(punto[i].x - 20, punto[i].y - 20, 40, 40);
 
-        }
-    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -145,15 +134,16 @@ public class Tablero extends JPanel {
         boolean contador_posiciones = false;
 
 
-        for (int pos = 0; pos < this.fichas_negras.length; pos++) {
-            this.fichas_negras[pos] = new FichaNegra();
-            this.fichas_Rojas[pos] = new FichaRoja();
-            this.fichas_negras[pos].setBounds(-20, 100 + (pos * 40), 40, 40);
-            this.fichas_Rojas[pos].setBounds(this.getWidth() - 20, 100 + (pos * 40), 40, 40);
-            this.add(this.fichas_negras[pos]);
-            this.add(this.fichas_Rojas[pos]);
-
+        for(;SFRojas<6;SFRojas++,SFNegras++)
+        {
+            fichas_negras.add(new FichaNegra());
+            fichas_Rojas.add(new FichaRoja());
+            fichas_negras.get(SFNegras).setBounds(-20, 100 + (SFNegras * 40), 40, 40);
+            fichas_Rojas.get(SFRojas).setBounds(this.getWidth()-20, 100 + (SFRojas * 40), 40, 40);
+            this.add(fichas_Rojas.get(SFRojas));
+            this.add(fichas_negras.get(SFNegras));
         }
+
 
     }
 
