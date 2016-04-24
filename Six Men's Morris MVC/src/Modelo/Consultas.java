@@ -12,31 +12,57 @@ import java.util.Map;
 public class Consultas {
     ListaPosiciones lista;
     Query q1;
+
     public Consultas(){
         lista= new ListaPosiciones();
         q1= new Query("consult('SMH.pl')");
         q1.oneSolution();
     }
+
     public boolean tresEnLinea(int i)
     {
 
 
-        if(i==0||i==1||i==2&&(lista.getElementInt(0)==lista.getElementInt(1)&&lista.getElementInt(2)==lista.getElementInt(0)) )
+        if((i==0||i==1||i==2)&&(lista.getElementInt(0)==lista.getElementInt(1)&&lista.getElementInt(2)==lista.getElementInt(0)) ) {
+            System.out.print(1+"");
             return true;
-        else if(i==0||i==6||i==13&&(lista.getElementInt(0)==lista.getElementInt(6)&&lista.getElementInt(13)==lista.getElementInt(0)))
-          return true;
-        else if(i==13||i==14||i==15&&(lista.getElementInt(13)==lista.getElementInt(14)&&lista.getElementInt(14)==lista.getElementInt(15)))
+
+        }
+        else if((i==0||i==6||i==13)&&(lista.getElementInt(0)==lista.getElementInt(6)&&lista.getElementInt(13)==lista.getElementInt(0))) {
+            System.out.print(2+"");
             return true;
-        else if(i==2||i==9||i==15&&(lista.getElementInt(2)==lista.getElementInt(9)&&lista.getElementInt(9)==lista.getElementInt(15)))
+
+        }
+        else if((i==13||i==14||i==15)&&(lista.getElementInt(13)==lista.getElementInt(14)&&lista.getElementInt(14)==lista.getElementInt(15))){
+            System.out.print(3+"");
             return true;
-        else if(i==3||i==4||i==5&&(lista.getElementInt(3)==lista.getElementInt(4)&&lista.getElementInt(4)==lista.getElementInt(5)))
+
+        }
+        else if((i==2||i==9||i==15)&&(lista.getElementInt(2)==lista.getElementInt(9)&&lista.getElementInt(9)==lista.getElementInt(15))){
+            System.out.print(4+"");
             return true;
-        else if(i==3||i==7||i==10&&(lista.getElementInt(3)==lista.getElementInt(7)&&lista.getElementInt(7)==lista.getElementInt(10)))
+
+        }
+        else if((i==3||i==4||i==5)&&(lista.getElementInt(3)==lista.getElementInt(4)&&lista.getElementInt(4)==lista.getElementInt(5))){
+            System.out.print(5+"");
             return true;
-        else if(i==10||i==11||i==12&&(lista.getElementInt(10)==lista.getElementInt(11)&&lista.getElementInt(11)==lista.getElementInt(12)))
+
+        }
+        else if((i==3||i==7||i==10)&&(lista.getElementInt(3)==lista.getElementInt(7)&&lista.getElementInt(7)==lista.getElementInt(10))) {
+            System.out.print(6+"");
             return true;
-        else if(i==5||i==8||i==12&&(lista.getElementInt(5)==lista.getElementInt(8)&&lista.getElementInt(8)==lista.getElementInt(12)))
+
+        }
+        else if((i==10||i==11||i==12)&&(lista.getElementInt(10)==lista.getElementInt(11)&&lista.getElementInt(11)==lista.getElementInt(12))){
+            System.out.print(7+"");
             return true;
+
+        }
+        else if((i==5||i==8||i==12)&&(lista.getElementInt(5)==lista.getElementInt(8)&&lista.getElementInt(8)==lista.getElementInt(12))){
+            System.out.print(8+"");
+            return true;
+
+        }
         else return false;
 
     }

@@ -77,14 +77,14 @@ pos(q16,15).
 movimientos(X,Y):-trans(X,X1),pos(X1,Y).
 
 %arbol de conocimiento que indica cuando es 3 en linea
-tresEnLinea([q1,q2,q3]).
-tresEnLinea([q1,q7,q14]).
-tresEnLinea([q4,q5,q6]).
-tresEnLinea([q4,q8,q11]).
-tresEnLinea([q14,q15,q16]).
-tresEnLinea([q3,q10,q16]).
-tresEnLinea([q11,q12,q13]).
-tresEnLinea([q6,q9,q13]).
+tresEnLinea([0,1,2]).
+tresEnLinea([0,6,13]).
+tresEnLinea([3,4,5]).
+tresEnLinea([3,7,10]).
+tresEnLinea([13,14,15]).
+tresEnLinea([2,9,15]).
+tresEnLinea([10,11,12]).
+tresEnLinea([5,8,12]).
 
 
 %funciones sacadas de el libro de ejercicios para verificar cualquier permutuacion

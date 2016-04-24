@@ -12,13 +12,19 @@ public abstract class Ficha extends JLabel {
     protected final int BLANCA = 2;
     protected ImageIcon color_ficha;
     protected ImageIcon ficha_seleccionada;
+
     protected boolean estaEliminada = false;
+    protected boolean isSelected = false;
+
     protected int tipo;
+    protected int posicion;
+
     File ruta = new File("src\\Imagenes");
-    boolean isSelected = false;
+
 
     public Ficha() {
         this.setOpaque(true);
+        posicion = -1;
     }
 
     public void setSelected(boolean selected) {
@@ -34,5 +40,13 @@ public abstract class Ficha extends JLabel {
     public boolean isSelected() {
         return this.isSelected;
 
+    }
+
+    public int getPosicion() {
+        return posicion;
+    }
+
+    public void setPosicion(int posicion) {
+        this.posicion = posicion;
     }
 }

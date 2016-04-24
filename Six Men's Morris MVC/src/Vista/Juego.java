@@ -1,9 +1,13 @@
 package Vista;
 
+import Modelo.Consultas;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.border.Border;
 
 public class Juego extends JFrame  {
     public static int WIDTH = 600;
@@ -22,11 +26,13 @@ public class Juego extends JFrame  {
         this.setDefaultCloseOperation(3);
         this.setVisible(true);
         this.setLayout(new BorderLayout());
-        this.add("Center", this.tablero);
+        this.add(BorderLayout.CENTER, this.tablero);
     }
 
     public static void main(String[] args) {
-        new Juego();
+       new Juego();
+
+
 
     }
 }
