@@ -57,4 +57,10 @@ public class ListaPosiciones {
     {
         return a;
     }
+    public void resetPosiciones(){
+        for (int i = 0 ; i < a.length; i++){
+            a[i] = 0;
+        }
+    }
+
 }

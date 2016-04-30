@@ -3,12 +3,9 @@ package Vista;
 import Modelo.Consultas;
 import Modelo.ListaPosiciones;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.LayoutManager;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -26,11 +23,13 @@ public class Tablero extends JPanel {
     private JLabel turno_ficha = new JLabel("Turno");
     private JTextField color_ficha = new JTextField(20);
 
-    private JLabel label_negras = new JLabel("Negras:");
-    private JLabel label_rojas = new JLabel("Rojas:");
+    private JLabel label_negras = new JLabel("Fichas negras:");
+    private JLabel label_rojas = new JLabel("Fichas rojas:");
 
     private JTextField contador_negras = new JTextField(5);
     private JTextField contador_rojas = new JTextField(5);
+
+    private JButton reiniciar = new JButton("Reiniciar");
 
 
 
@@ -72,15 +71,17 @@ public class Tablero extends JPanel {
         add(contador_negras);
         add(label_rojas);
         add(contador_rojas);
-
+        add(reiniciar);
         turno_ficha.setBounds(20,10,40,20);
         color_ficha.setBounds(60,10, 20, 20);
 
-        label_negras.setBounds(350, 10, 50, 20);
-        contador_negras.setBounds(400, 10, 20, 20);
+        label_negras.setBounds(200, 10, 100, 20);
+        contador_negras.setBounds(290, 10, 20, 20);
 
-        label_rojas.setBounds(430, 10, 50, 20);
-        contador_rojas.setBounds(470,10, 20, 20);
+        label_rojas.setBounds(320, 10, 100, 20);
+        contador_rojas.setBounds(400,10, 20, 20);
+
+
 
 
 
@@ -131,10 +132,11 @@ public class Tablero extends JPanel {
                 if(cantidad_movimientos>=12&&Trancado())
                 {
                     if(!turno)
-                        System.out.println("Ganaron las Negras");
+                        mostrarGanador("Ganaron las negras");
                     else
-                        System.out.print("Ganaron las Rojas!");
-                    ganador=true;
+                        mostrarGanador("Ganaron las rojas");
+
+                    ganador = true;
                 }
             }
 
@@ -164,11 +166,11 @@ public class Tablero extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (this.bufferedImage == null) {
-            this.createBufferedImage();
-            this.inicializarPosiciones();
-            this.posicionaFichas();
-            this.drawGame();
+        if (bufferedImage == null) {
+            createBufferedImage();
+            inicializarPosiciones();
+            posicionaFichas();
+            drawGame();
         }
 
 
@@ -218,6 +220,17 @@ public class Tablero extends JPanel {
             this.add(fichas_negras.get(i));
         }
 
+        reiniciar.setBounds(getWidth()/2 - 50, getHeight()/2 + 90, 100, 30);
+
+        reiniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearPanel();
+                posicionaFichas();
+                drawGame();
+            }
+        });
+
 
     }
 
@@ -235,14 +248,47 @@ public class Tablero extends JPanel {
             this.g2d.drawLine(punto[10].x, punto[10].y, punto[12].x, punto[12].y);
             this.g2d.drawLine(punto[11].x, punto[11].y, punto[14].x, punto[14].y);
             this.g2d.drawLine(punto[13].x, punto[13].y, punto[15].x, punto[15].y);
+
         }
 
     }
 
     public void clearPanel() {
-        if (this.g2d != null) {
-            this.g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
-            this.repaint();
+        if (g2d != null) {
+            g2d.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+            for (int i = 0; i < fichas_negras.size(); i++){
+                fichas_negras.get(i).setBounds(- 10, -10, 10,10);
+            }
+
+            for (int i =0 ; i < fichas_Rojas.size(); i++){
+                fichas_Rojas.get(i).setBounds(- 10, -10, 10,10);
+            }
+
+            fichas_negras.removeAll(fichas_negras);
+            fichas_Rojas.removeAll(fichas_Rojas);
+
+            color_ficha.setBackground(Color.RED);
+
+            contador_negras.setText("0");
+            contador_rojas.setText("0");
+
+
+            posiciones.resetPosiciones();
+
+            SFNegras = 0;
+            SFRojas = 0;
+
+            ganador = false;
+
+            turno = false;
+            tresEnLinea = false;
+
+            cantidad_movimientos = 0;
+
+
+
+            repaint();
         }
 
     }
@@ -326,7 +372,7 @@ public class Tablero extends JPanel {
 
                     SFRojas--;
                     if(MenorATres(SFRojas)&&cantidad_movimientos==12) {
-                        System.out.println("GANARON LAS NEGRAS");
+                        mostrarGanador("Ganaron las negras");
                         ganador=true;
                     }
                     contador_rojas.setText(SFRojas + "");
@@ -338,8 +384,6 @@ public class Tablero extends JPanel {
         else{
             for (int i = 0; i < fichas_negras.size(); i++){
                 if(fichas_negras.get(i).posicion == posicion) {
-                    System.out.println(posicion);
-                    System.out.println(i);
                     this.remove(fichas_negras.get(i));
                     fichas_negras.remove(i);
                     posiciones.setInt(posicion, 0);
@@ -347,7 +391,7 @@ public class Tablero extends JPanel {
                     tresEnLinea = false;
                     SFNegras--;
                     if(MenorATres(SFNegras)&&cantidad_movimientos==12){
-                        System.out.println("GANARON LAS ROJAS");
+                        mostrarGanador("Ganaron las rojas");
                         ganador=true;
                     }
                     contador_negras.setText(SFNegras + "");
@@ -356,7 +400,7 @@ public class Tablero extends JPanel {
                 }
             }
         }
-        System.out.println(posiciones.toStringInt());
+//        System.out.println(posiciones.toStringInt());
         repaint();
     }
 
@@ -458,7 +502,7 @@ public class Tablero extends JPanel {
             }
         }
         repaint();
-        System.out.println(posiciones.toStringInt());
+//        System.out.println(posiciones.toStringInt());
     }
 
     private boolean MenorATres(int cantidad){
@@ -476,7 +520,6 @@ public class Tablero extends JPanel {
             for (int i= 0; i < fichas_negras.size(); i++)
             {
                 if(consultas.MovimientoDisponible(fichas_negras.get(i).posicion)) {
-                    System.out.println("entre1");
                     return false;
                 }
 
@@ -486,12 +529,16 @@ public class Tablero extends JPanel {
             for (int i = 0; i < fichas_Rojas.size(); i++)
             {
                 if(consultas.MovimientoDisponible(fichas_Rojas.get(i).posicion)){
-                    System.out.println("entre2");
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private void mostrarGanador(String ganador){
+        g2d.setFont(new Font("Verdana", Font.BOLD, 16));
+        g2d.drawString(ganador, getWidth()/2 - 70, getHeight()/2);
     }
 }
 
